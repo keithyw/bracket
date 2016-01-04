@@ -1,0 +1,7 @@
+/storage
+/vendor
+/workbench
+/node_modules
+Homestead.yaml
+Homestead.json
+.env

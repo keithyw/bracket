@@ -1,0 +1,5 @@
+@include('helpers.data_field', ['field' => 'address', 'model' => $model])
+@include('helpers.data_field', ['field' => 'address2', 'model' => $model])
+@include('helpers.data_field', ['field' => 'city', 'model' => $model])
+@include('helpers.data_field', ['field' => 'state', 'model' => $model])
+@include('helpers.data_field', ['field' => 'postal', 'model' => $model])
