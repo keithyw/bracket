@@ -1,4 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Router from 'react-router';
+import routes from 'routes';
 
-ReactDOM.render(<h1>my mistake</h1>, document.getElementById('content'));
+
+ReactDOM.render(<Router routes={routes}/>, document.getElementById('content'));

@@ -15,7 +15,7 @@ module.exports = {
     resolve: {
         root: srcPath,
         extensions: ['', '.js'],
-        modulesDirectories: ['node_modules', 'src']
+        modulesDirectories: ['node_modules', 'fe']
     },
     output: {
         path: path.join(__dirname, 'public/js'),
