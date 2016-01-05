@@ -16,5 +16,7 @@
 <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://js.pusher.com/3.0/pusher.min.js"></script>
 <script src="/js/app.js" type="text/javascript"></script>
+<script src="/js/common.js"></script>
+<script src="/js/module.js"></script>
 </body>
 </html>
