@@ -25,12 +25,12 @@ class MessageStore {
 
     handleUpdateMessages(messages){
         console.log(messages);
-        this.messages = messages;
+        this.messages = messages.data ? messages.data : messages;
         this.error = null;
     }
 
     handleUpdateMessage(message){
-        this.messages.push(message);
+        this.messages.push({message:message});
     }
 }
 

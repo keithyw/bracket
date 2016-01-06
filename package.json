@@ -22,6 +22,7 @@
     "alt": "^0.16.10",
     "alt-react": "0.0.1",
     "alt-utils": "^1.0.0",
+    "axios": "^0.8.1",
     "babel-runtime": "^6.3.19",
     "babelify": "^7.2.0",
     "bootstrap-sass": "^3.0.0",

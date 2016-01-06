@@ -1,3 +1,4 @@
+import axios from 'axios';
 import MessageActions from 'actions/MessageActions';
 
 let messages = ['test1', 'test2', 'test3'];
@@ -6,6 +7,9 @@ export default {
     fetchMessages: {
         remote(){
             console.log('promise');
+            return axios.get('/brackets/messages');
+            ///return axios.get('/api/auctions');
+
             return new Promise(function (resolve, reject) {
                 setTimeout(function () {
                     if (true) {

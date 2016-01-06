@@ -8,6 +8,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\RawMessage;
 use Illuminate\Http\Request as MyRequest;
 
 class BracketController extends Controller {
@@ -15,6 +16,10 @@ class BracketController extends Controller {
     public function index(){
         return view('bracket/index');
         //return view($this->getIndexView(), ['items' => $items]);
+    }
+
+    public function messages(){
+        return response()->json(RawMessage::all());
     }
 
     public function store(MyRequest $request)

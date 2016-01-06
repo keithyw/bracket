@@ -19,7 +19,9 @@ Route::get('/', function () {
 
 });
 
+Route::get('/brackets/messages', 'BracketController@messages');
 Route::resource('brackets', 'BracketController');
+
 
 Route::post('/captcha', function(Request $request){
     $rules = ['g-recaptcha-response' => 'GoogleRecaptcha'];

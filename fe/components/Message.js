@@ -11,7 +11,7 @@ export default class Message extends React.Component {
     render(){
         return (
             <span>
-                {this.state.message}
+                {this.state.message.message}
             </span>
         );
     }
