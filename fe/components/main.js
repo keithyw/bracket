@@ -11,7 +11,7 @@ class Main extends React.Component {
             <div>
                 <h1>[[Bracket]]</h1>
                 <MessageForm/>
-                <MessageList messages={messages}/>
+                <MessageList/>
             </div>
         );
     }

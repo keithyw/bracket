@@ -1,7 +1,9 @@
 import React from 'react';
+import connectToStores from 'alt/utils/connectToStores';
 import MessageStore from 'stores/MessageStore';
 import MessageActions from 'actions/MessageActions';
 
+@connectToStores
 export default class MessageForm extends React.Component {
     constructor(props){
         super(props);
@@ -19,11 +21,11 @@ export default class MessageForm extends React.Component {
     }
 
     onClick(e) {
+        e.preventDefault();
         let form = document.forms.message_form;
         this.setState({message: form.message.value});
         MessageActions.updateMessage(form.message.value);
         alert("message " + form.message.value);
-        return false;
     }
 
 

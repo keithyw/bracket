@@ -3,14 +3,26 @@ import MessageActions from 'actions/MessageActions';
 
 class MessageStore {
     constructor(){
-        this.message = '';
+        this.messages = [];
         this.bindListeners({
-            handleUpdateMessage: MessageActions.UPDATE_MESSAGE
+            handleUpdateMessage: MessageActions.UPDATE_MESSAGE,
+            handleUpdateMessages: MessageActions.UPDATE_MESSAGES,
+            handleFetchMessages: MessageActions.FETCH_MESSAGES
+
         });
     }
 
+    handleFetchMessages(){
+        this.messages = [];
+    }
+
+    handleUpdateMessages(messages){
+        console.log(messages);
+        this.messages = messages;
+    }
+
     handleUpdateMessage(message){
-        this.message = message;
+        this.messages.push(message);
     }
 }
 

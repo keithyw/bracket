@@ -19,12 +19,13 @@
     "webpack-dev-server": "^1.14.0"
   },
   "dependencies": {
-    "alt": "^0.18.1",
+    "alt": "^0.16.10",
     "alt-react": "0.0.1",
     "alt-utils": "^1.0.0",
     "babel-runtime": "^6.3.19",
     "babelify": "^7.2.0",
     "bootstrap-sass": "^3.0.0",
+    "es-symbol": "^1.1.2",
     "laravel-elixir": "^3.0.0",
     "lodash": "^3.10.1",
     "react": "^0.14.5",
