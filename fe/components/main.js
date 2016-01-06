@@ -1,7 +1,6 @@
 import React from 'react';
 import {RouteHandler, Link} from 'react-router';
-import MessageForm from 'components/MessageForm';
-import MessageList from 'components/MessageList';
+import MessageBox from 'components/MessageBox';
 
 class Main extends React.Component {
     render() {
@@ -10,8 +9,7 @@ class Main extends React.Component {
         return (
             <div>
                 <h1>[[Bracket]]</h1>
-                <MessageForm/>
-                <MessageList/>
+                <MessageBox/>
             </div>
         );
     }
