@@ -17,15 +17,18 @@ class MessageActions {
 
     messagesFailed(data){
         this.dispatch(data);
+        return data;
     }
 
     updateMessage(data){
         this.dispatch(data);
+        return data;
     }
 
     updateMessages(data) {
         console.log('trying to dispatch');
         this.dispatch(data);
+        return data;
     }
 }
 

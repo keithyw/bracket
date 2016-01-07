@@ -1,5 +1,6 @@
 import React from 'react';
 import MessageActions from 'actions/MessageActions';
+import MessageStore from 'stores/MessageStore';
 
 export default class MessageForm extends React.Component {
     constructor(props){
@@ -10,7 +11,8 @@ export default class MessageForm extends React.Component {
         e.preventDefault();
         let form = document.forms.message_form;
         this.setState({message: form.message.value});
-        MessageActions.updateMessage(form.message.value);
+        MessageStore.saveMessage(form.message.value);
+        //MessageActions.saveMessage(form.message.value);
     }
 
     render(){

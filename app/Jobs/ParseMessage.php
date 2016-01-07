@@ -89,7 +89,7 @@ class ParseMessage extends Job implements SelfHandling{
                 Event::fire(new ProcessLinkEvent($this->_user, $ele['type'], $matches[1]));
             }
         }
-
-        return true;
+        return $raw;
+        //return true;
     }
 }

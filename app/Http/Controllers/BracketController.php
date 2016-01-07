@@ -9,6 +9,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\RawMessage;
+use App\Models\User;
+use App\Jobs\ParseMessage;
 use Illuminate\Http\Request as MyRequest;
 
 class BracketController extends Controller {
@@ -24,14 +26,8 @@ class BracketController extends Controller {
 
     public function store(MyRequest $request)
     {
-        /**
-        $model = $this->repository->create($request->all());
-        if (isset($model->id)){
-            return redirect()->route("{$this->getBaseRoute()}.show", ['id' => $model->id]);
-        }
-        // lame but need to figure out how to deal with errors
-        // return redirect()->route('')
-        return redirect()->route("{$this->getBaseRoute()}.create");
-         */
+        $user = User::find(1);
+        $ret = $this->dispatch(new ParseMessage($user, $request->get('message')));
+        return response()->json($ret);
     }
 }

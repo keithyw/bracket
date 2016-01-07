@@ -1,4 +1,5 @@
 import flux from 'control';
+import axios from 'axios';
 import MessageActions from 'actions/MessageActions';
 import MessageSource from 'sources/MessageSource';
 
@@ -13,6 +14,9 @@ class MessageStore {
             handleMessagesFailed: MessageActions.MESSAGES_FAILED
         });
         this.exportAsync(MessageSource);
+        this.exportPublicMethods({
+            saveMessage: this.saveMessage
+        });
     }
 
     handleFetchMessages(){
@@ -30,7 +34,12 @@ class MessageStore {
     }
 
     handleUpdateMessage(message){
-        this.messages.push({message:message});
+        this.messages.push(message.data);
+    }
+
+    saveMessage(message){
+        return axios.post('/brackets', {message:message})
+            .then(MessageActions.updateMessage);
     }
 }
 
