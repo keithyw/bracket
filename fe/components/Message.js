@@ -13,24 +13,41 @@ export default class Message extends React.Component {
         let items = this.state.message.split(/\s+/);
         let reg = /^\|(\d+)\|$/;
         let arr = [];
+        let ret = null;
         if (this.state.raw_results){
-            items.map((txt) => {
+            ret = items.map((txt) => {
+                arr.push(txt);
                 if (reg.test(txt)){
                     let id = txt.substring(1, txt.length -1);
                     if (this.state.raw_results[id]){
-                        txt = this.state.raw_results[id][0].image_default;
+                        //txt = this.state.raw_results[id][0].image_default;
+                        let url = 'http://www.youtube.com/embed/' + this.state.raw_results[id][0].id;
+                        let src = this.state.raw_results[id][0].image_default;
+                        //return (<img src={src}/>);
+                        return(<iframe type="text/html" width="640" height="390" src={url} frameBorder="0"></iframe>);
                     }
-                    //console.log("id " + id);
                 }
-                arr.push(txt);
-                //console.log("txt " + txt);
+                return (txt);
             });
+            console.log(ret);
         }
-        let str = arr.length > 0 ? arr.join(' ') : this.state.message;
+        if (arr.length > 0 ){
+            return(
+                <span>
+                    {ret}
+                </span>
+            );
+        }
         return (
             <span>
-                {str}
+                {this.state.message}
             </span>
         );
     }
 }
+
+/**
+<iframe id="ytplayer" type="text/html" width="640" height="390"
+    src="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"
+    frameborder="0"/>
+ */
