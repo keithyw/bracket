@@ -40,21 +40,14 @@ class ProcessLinkEventListener
      */
     public function handle(ProcessLinkEvent $event)
     {
-        $data = [];
         foreach ($event->items as $term){
-            if ($item = RawResult::whereRaw('type = ? AND term = ?', [$event->type, $term])->first()){
-                $data[] = json_decode($item->results);
-            }
-            else{
-                // this part we can call a separate function to defer
-                // the specific search
-                $data[] = $this->_youtubeService->search($term);
-                $obj = new RawResult();
-                $obj->fill(['type' => $event->type, 'term' => $term, 'results' => json_encode($data)]);
-                $obj->save();
-            }
-            // may want to move the channel name and event into another area eventually
-
+            $term = trim($term);
+            // this part we can call a separate function to defer
+            // the specific search
+            $data = $this->_youtubeService->search($term);
+            $obj = new RawResult();
+            $obj->fill(['type' => $event->type, 'term' => $term, 'results' => json_encode($data)]);
+            $obj->save();
         }
         $this->_pusher->trigger('message_channel', 'process_link', $data);
     }

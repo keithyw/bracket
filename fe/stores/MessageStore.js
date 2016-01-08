@@ -34,6 +34,7 @@ class MessageStore {
     }
 
     handleUpdateMessage(message){
+        console.log(message);
         this.messages.push(message.data);
     }
 

@@ -12,7 +12,6 @@ export default class MessageForm extends React.Component {
         let form = document.forms.message_form;
         this.setState({message: form.message.value});
         MessageStore.saveMessage(form.message.value);
-        //MessageActions.saveMessage(form.message.value);
     }
 
     render(){
