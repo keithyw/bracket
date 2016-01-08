@@ -39,6 +39,7 @@ return [
         'key' => env('PUSHER_KEY'),
         'secret' => env('PUSHER_SECRET'),
     ],
+    'google_maps' => env('GOOGLE_MAPS_API'),
     'youtube' => env('YOUTUBE_API'),
 
 ];

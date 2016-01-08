@@ -1,4 +1,6 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import GoogleMap from 'google-map-react';
 
 class LinkPartial extends React.Component {
     constructor(props){
@@ -11,6 +13,24 @@ class LinkPartial extends React.Component {
         );
     }
 }
+
+class MapPartial extends React.Component {
+    constructor(props){
+        super(props);
+
+    }
+
+    render(){
+        return (
+            <div className="maps">
+                <GoogleMap defaultZoom={10} defaultCenter={{lat: this.props.lat, lng: this.props.lng}}>
+                    <div lat={this.props.lat} lng={this.props.lng}>Here</div>
+                </GoogleMap>
+            </div>
+        );
+    }
+}
+
 class VideoPartial extends React.Component {
     constructor(props){
         super(props);
@@ -49,14 +69,20 @@ export default class Message extends React.Component {
         if (this.state.raw_results){
             // need to create different components per situation
             // so figure out the type then map that to a component for rendering.
-            ret = items.map((txt) => {
+            ret = items.map((txt, i) => {
                 arr.push(txt);
                 if (reg.test(txt)){
                     let id = txt.substring(1, txt.length -1);
                     if (this.state.raw_results[id]){
                         let results = this.state.raw_results[id].results
-
-                        return(<VideoPartial videoId={results[0].id}/>);
+                        switch (this.state.raw_results[id].type){
+                            case 'link':
+                                return(<VideoPartial videoId={results[0].id} key={i}/>);
+                            case 'map':
+                                let lng = results[0].geometry.location.lng;
+                                let lat = results[0].geometry.location.lat;
+                                return(<MapPartial lng={lng} lat={lat} key={i}/>);
+                        }
                     }
                 }
                 return (txt);

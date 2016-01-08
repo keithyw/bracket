@@ -11,6 +11,8 @@
 <div id="content" class="content">
     @yield('content')
 </div>
+<?php $key = Config::get('services.google_maps') ?>
+<script async defer src="https://maps.googleapis.com/maps/api/js"></script>
 <script src="/js/common.js"></script>
 <script src="/js/module.js"></script>
 </body>
