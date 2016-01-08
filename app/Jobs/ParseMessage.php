@@ -92,19 +92,6 @@ class ParseMessage extends Job implements SelfHandling{
 
         // we'll use this as a starting template and then replace each of the []
         // into tags.
-/**
-        0 =>
-  array (
-      0 => '[l giraffes l]',
-      1 => '[l tonight l]',
-  ),
-  1 =>
-  array (
-      0 => ' giraffes ',
-      1 => ' tonight ',
-  ),
-)
- **/
         $newMessage = $this->_message;
         foreach ($this->_elements as $ele){
             if (preg_match_all($ele['reg'], $this->_message, $matches)){
@@ -124,7 +111,8 @@ class ParseMessage extends Job implements SelfHandling{
                         //$arr = json_decode($item->results);
                         Log::info($item);
                         Log::info($matches);
-                        $data[$item->id]= json_decode($item->results);
+                        $item->results = json_decode($item->results);
+                        $data[$item->id]= $item;
                         $newMessage = str_replace($matches[0][$x], $this->_convertBracket($ele['type'], $term, $item), $newMessage);
                     }
                     else{
