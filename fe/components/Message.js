@@ -76,7 +76,7 @@ export default class Message extends React.Component {
                     if (this.state.raw_results[id]){
                         let results = this.state.raw_results[id].results
                         switch (this.state.raw_results[id].type){
-                            case 'link':
+                            case 'video':
                                 return(<VideoPartial videoId={results[0].id} key={i}/>);
                             case 'map':
                                 let lng = results[0].geometry.location.lng;

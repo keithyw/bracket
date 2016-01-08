@@ -55,7 +55,7 @@ class ProcessLinkEventListener
             // the specific search
             $data = null;
             switch ($event->type){
-                case 'link':
+                case 'video':
                     $data = $this->_youtubeService->search($term);
                     break;
                 case 'map':

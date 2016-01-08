@@ -13,4 +13,8 @@ use Conark\Jackhammer\Models\BaseModel;
 class RawResult extends BaseModel {
     protected $table = 'raw_results';
     protected $fillable = ['type', 'term', 'results'];
+
+    public function processedMessage(){
+        return $this->hasOne('App\Models\ProcessedMessage');
+    }
 }

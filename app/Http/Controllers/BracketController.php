@@ -9,6 +9,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\RawMessage;
+use App\Models\ProcessedMessage;
 use App\Models\User;
 use App\Jobs\ParseMessage;
 use Illuminate\Http\Request as MyRequest;
@@ -21,7 +22,12 @@ class BracketController extends Controller {
     }
 
     public function messages(){
-        return response()->json(RawMessage::all());
+        $messages = ProcessedMessage::all();
+        foreach ($messages as &$m){
+            $m->raw_results = json_decode($m->raw_results);
+        }
+        return response()->json($messages);
+        //return response()->json(RawMessage::all());
     }
 
     public function store(MyRequest $request)

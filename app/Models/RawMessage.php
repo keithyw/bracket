@@ -14,6 +14,10 @@ class RawMessage extends BaseModel{
     protected $table = 'raw_messages';
     protected $fillable = ['message'];
 
+    public function processedMessage(){
+        return $this->hasOne('App\Models\ProcessedMessage');
+    }
+
     public function user(){
         return $this->belongsTo('App\Models\User');
     }

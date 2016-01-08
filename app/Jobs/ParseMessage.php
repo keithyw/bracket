@@ -12,6 +12,7 @@ use Event;
 use Log;
 use Illuminate\Contracts\Bus\SelfHandling;
 use App\Events\ProcessLinkEvent;
+use App\Models\ProcessedMessage;
 use App\Models\RawMessage;
 use App\Models\RawResult;
 use App\Models\User;
@@ -116,6 +117,7 @@ class ParseMessage extends Job implements SelfHandling{
                         $item->results = json_decode($item->results);
                         $data[$item->id]= $item;
                         $newMessage = str_replace($matches[0][$x], $this->_convertBracket($ele['type'], $term, $item), $newMessage);
+
                     }
                     else{
                         // put the actual term search into a background type of call
@@ -126,6 +128,10 @@ class ParseMessage extends Job implements SelfHandling{
 
             }
         }
+        $processedMessage = new ProcessedMessage();
+        $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
+        $processedMessage->rawMessage()->associate($raw);
+        $processedMessage->save();
 
         // save to processed message?
         return ['message' => $newMessage, 'raw_results' => $data];
