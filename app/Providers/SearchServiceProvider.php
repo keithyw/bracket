@@ -13,7 +13,8 @@ use Illuminate\Support\ServiceProvider;
 class SearchServiceProvider extends ServiceProvider{
     public function register()
     {
+        //$this->app->bind('App\Services\GoogleSearchInterface', 'App\Services\GoogleSearch');
+        $this->app->bind('App\Services\GoogleGeocodingSearchInterface', 'App\Services\GoogleGeocodingSearch');
         $this->app->bind('App\Services\YoutubeSearchInterface', 'App\Services\YoutubeSearch');
-        //$this->app->bind('App\Repositories\AddressRepositoryInterface', 'App\Repositories\AddressRepository');
     }
 }

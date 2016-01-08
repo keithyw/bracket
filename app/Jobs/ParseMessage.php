@@ -34,6 +34,7 @@ class ParseMessage extends Job implements SelfHandling{
     private $_elements = [
         ['reg' => '/\[l(.*?)l\]/', 'type' => 'link'],
         ['reg' => '/\[i(.*?)i\]/', 'type' => 'image'],
+        ['reg' => '/\[map(.*?)map\]/', 'type' => 'map'],
         ['reg' => '/\[g(.*?)g\]/', 'type' => 'giphy'],
         ['reg' => '/\[p(.*?)p\]/', 'type' => 'preview'],
         ['reg' => '/\[t(.*?)t\]/', 'type' => 'twitter'],
@@ -55,6 +56,7 @@ class ParseMessage extends Job implements SelfHandling{
      * Let's start with a few basic things to parse
      * [l l] -> search link
      * [i i] -> image
+     * [map map] -> map search
      * [g g] -> animated gif
      * [p p] -> preview
      * [v v] -> video

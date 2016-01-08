@@ -1,5 +1,16 @@
 import React from 'react';
 
+class LinkPartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return(
+            <a href="">test</a>
+        );
+    }
+}
 class VideoPartial extends React.Component {
     constructor(props){
         super(props);
@@ -12,6 +23,14 @@ class VideoPartial extends React.Component {
         );
     }
 }
+/**
+* [l l] -> search link
+* [i i] -> image
+* [g g] -> animated gif
+* [p p] -> preview
+* [v v] -> video
+* [t t] -> twitter
+ */
 
 export default class Message extends React.Component {
     constructor(props){
