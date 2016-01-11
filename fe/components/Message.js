@@ -23,7 +23,7 @@ class MapPartial extends React.Component {
     render(){
         return (
             <div className="maps">
-                <GoogleMap defaultZoom={10} defaultCenter={{lat: this.props.lat, lng: this.props.lng}}>
+                <GoogleMap defaultZoom={10} defaultCenter={{lat: this.props.lat, lng: this.props.lng}} bootstrapURLKeys={{ key: 'AIzaSyDMAbkcAVqq-Ij4HrlKU7KkUUnzwA1qw2w'}}>
                     <div lat={this.props.lat} lng={this.props.lng}>Here</div>
                 </GoogleMap>
             </div>
@@ -62,20 +62,20 @@ export default class Message extends React.Component {
     }
 
     render(){
-        let items = this.state.message.split(/\s+/);
+        let items = this.props.message.message.split(/\s+/);
         let reg = /^\|(\d+)\|$/;
         let arr = [];
         let ret = null;
-        if (this.state.raw_results){
+        if (this.props.message.raw_results){
             // need to create different components per situation
             // so figure out the type then map that to a component for rendering.
             ret = items.map((txt, i) => {
                 arr.push(txt);
                 if (reg.test(txt)){
                     let id = txt.substring(1, txt.length -1);
-                    if (this.state.raw_results[id]){
-                        let results = this.state.raw_results[id].results
-                        switch (this.state.raw_results[id].type){
+                    if (this.props.message.raw_results[id]){
+                        let results = this.props.message.raw_results[id].results
+                        switch (this.props.message.raw_results[id].type){
                             case 'video':
                                 return(<VideoPartial videoId={results[0].id} key={i}/>);
                             case 'map':
@@ -97,7 +97,7 @@ export default class Message extends React.Component {
         }
         return (
             <span>
-                {this.state.message}
+                {this.props.message}
             </span>
         );
     }

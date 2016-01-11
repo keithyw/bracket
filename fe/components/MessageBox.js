@@ -1,5 +1,6 @@
 import React from 'react';
 import connectToStores from 'alt/utils/connectToStores';
+
 import MessageForm from 'components/MessageForm';
 import MessageList from 'components/MessageList';
 import MessageStore from 'stores/MessageStore';
@@ -20,8 +21,15 @@ export default class MessageBox extends React.Component {
         return MessageStore.getState();
     }
 
-    render(){
+    componentDidMount() {
+        this.pusher = new Pusher('a465bf31c05983004c18', {
+            encrypted: true
+        });
+        this.channel = this.pusher.subscribe('message_channel');
+        this.channel.bind('process_link', MessageActions.fixMessage);
+    }
 
+    render(){
         return (
             <div>
                 <MessageForm/>

@@ -3,6 +3,7 @@
 namespace App\Events;
 
 use App\Events\Event;
+use App\Models\RawMessage;
 use App\Models\User;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -12,6 +13,16 @@ class ProcessLinkEvent extends Event
     use SerializesModels;
 
     /**
+     * @var RawMessage
+     */
+    public $rawMessage;
+
+    /**
+     * @var string
+     */
+    public $replacedItem;
+
+    /**
      * @var User
      */
     public $user;
@@ -19,23 +30,27 @@ class ProcessLinkEvent extends Event
     /**
      * @var string
      */
-    public $type;
+    public $term;
 
     /**
-     * @var array
+     * @var string
      */
-    public $items;
+    public $type;
 
     /**
      * @param User $user
      * @param string $type
-     * @param array $items
+     * @param string $term
+     * @param RawMessage $raw
+     * @param string $replaceItem
      */
-    public function __construct(User $user, $type, $items)
+    public function __construct(User $user, $type, $term, RawMessage $raw, $replaceItem)
     {
         $this->user = $user;
         $this->type = $type;
-        $this->items = $items;
+        $this->term = $term;
+        $this->rawMessage = $raw;
+        $this->replacedItem = $replaceItem;
     }
 
     /**

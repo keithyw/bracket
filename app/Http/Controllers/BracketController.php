@@ -24,10 +24,13 @@ class BracketController extends Controller {
     public function messages(){
         $messages = ProcessedMessage::all();
         foreach ($messages as &$m){
-            $m->raw_results = json_decode($m->raw_results);
+            $data = json_decode($m->raw_results, 1);
+            foreach ($data as $id => &$arr){
+                $arr['results'] = json_decode($arr['results'], 1);
+            }
+            $m->raw_results = $data;
         }
         return response()->json($messages);
-        //return response()->json(RawMessage::all());
     }
 
     public function store(MyRequest $request)

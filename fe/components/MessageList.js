@@ -4,7 +4,6 @@ import Message from 'components/Message';
 export default class MessageList extends React.Component {
     constructor(props){
         super(props);
-        console.log(props);
     }
 
     render(){

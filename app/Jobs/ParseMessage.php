@@ -121,20 +121,36 @@ class ParseMessage extends Job implements SelfHandling{
                     }
                     else{
                         // put the actual term search into a background type of call
-                        Event::fire(new ProcessLinkEvent($this->_user, $ele['type'], $matches[1]));
+                        // probably need more stuff like the raw message that was saved
+                        // so we can reference that to get the processed message
+                        // also need to get item that we will be replacing
+                        Event::fire(new ProcessLinkEvent($this->_user, $ele['type'], $term, $raw, $matches[0][$x]));
                     }
                     $x++;
                 }
 
             }
         }
-        $processedMessage = new ProcessedMessage();
-        $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
-        $processedMessage->rawMessage()->associate($raw);
-        $processedMessage->save();
-
+        // this is causing double saves because of async issues
+        // so we need to try and grab the processed message via the raw message key
+        if (isset($raw->processedMessage->id)){
+            $processedMessage = $raw->processedMessage;
+            /**
+            $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
+            $processedMessage->rawMessage()->associate($raw);
+            $processedMessage->save();
+             */
+        }
+        else{
+            $processedMessage = new ProcessedMessage();
+            $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
+            $processedMessage->rawMessage()->associate($raw);
+            $processedMessage->save();
+        }
         // save to processed message?
-        return ['message' => $newMessage, 'raw_results' => $data];
+        //return ['message' => $newMessage, 'raw_results' => $data, 'processed_message' => $processedMessage];
+        $processedMessage->raw_results = $data;
+        return $processedMessage;
         //return true;
     }
 
