@@ -36,6 +36,7 @@ class MessageStore {
     handleFixMessage(message){
         let found = false;
         let me = this;
+        console.log(message);
         if (this.messages.length > 0){
             this.messages.forEach(function(msg, i){
                 if (msg.raw_message_id == message.raw_message_id){

@@ -8,6 +8,7 @@ use Pusher;
 use App\Events\ProcessLinkEvent;
 use App\Models\ProcessedMessage;
 use App\Models\RawResult;
+use App\Services\GiphySearchInterface;
 use App\Services\GoogleGeocodingSearchInterface;
 use App\Services\YoutubeSearchInterface;
 use App\Services\YoutubeServiceInterface;
@@ -18,7 +19,12 @@ class ProcessLinkEventListener
 {
 
     /**
-     * @var GoogleGeocodingSearch
+     * @var GiphySearchInterface
+     */
+    private $_giphySearch;
+
+    /**
+     * @var GoogleGeocodingSearchInterface
      */
     private $_googleGeocodingSearch;
 
@@ -33,14 +39,25 @@ class ProcessLinkEventListener
     private $_youtubeService;
 
     /**
+     * @param GiphySearchInterface $giphySearchInterface
      * @param GoogleGeocodingSearchInterface $googleGeocodingSearchInterface
      * @param YoutubeSearchInterface $youtubeSearchInterface
      */
-    public function __construct(GoogleGeocodingSearchInterface $googleGeocodingSearchInterface, YoutubeSearchInterface $youtubeSearchInterface)
+    public function __construct(GiphySearchInterface $giphySearchInterface, GoogleGeocodingSearchInterface $googleGeocodingSearchInterface, YoutubeSearchInterface $youtubeSearchInterface)
     {
+        $this->_giphySearch = $giphySearchInterface;
         $this->_googleGeocodingSearch = $googleGeocodingSearchInterface;
         $this->_pusher = new Pusher(Config::get('services.pusher.key'), Config::get('services.pusher.secret'), Config::get('services.pusher.app_id'));
         $this->_youtubeService = $youtubeSearchInterface;
+    }
+
+    private function _processGiphy($results)
+    {
+        $arr = [];
+        foreach ($results as $res){
+            $arr[]= $res['images']['original'];
+        }
+        return $arr;
     }
 
     /**
@@ -57,6 +74,10 @@ class ProcessLinkEventListener
         // the specific search
         $data = [];
         switch ($event->type){
+            case 'giphy':
+                $giphy = $this->_giphySearch->search($term);
+                $data = $this->_processGiphy($giphy);
+                break;
             case 'video':
                 $data = $this->_youtubeService->search($term);
                 break;
@@ -95,17 +116,11 @@ class ProcessLinkEventListener
         Log::info("sending to pusher");
         Log::info("message " . print_r($processedMessage->message, 1));
         Log::info("raw_results " . print_r($data, 1));
-        //$this->_pusher->trigger('message_channel', 'process_link', ['message' => $processedMessage]);
-
-        // unfortunate but necessary
-
         foreach ($data as $id => &$arr){
             $arr['results'] = json_decode($arr['results'], 1);
         }
         $processedMessage->raw_results = $data;
         $this->_pusher->trigger('message_channel', 'process_link', $processedMessage);
-        //return ['message' => $newMessage, 'raw_results' => $data];
-        //$this->_pusher->trigger('message_channel', 'process_link', $data);
     }
 
     /**

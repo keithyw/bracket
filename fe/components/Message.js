@@ -14,6 +14,20 @@ class LinkPartial extends React.Component {
     }
 }
 
+class GiphyPartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return(
+            <div>
+                <img src={this.props.image}/>
+            </div>
+        );
+    }
+}
+
 class MapPartial extends React.Component {
     constructor(props){
         super(props);
@@ -76,6 +90,8 @@ export default class Message extends React.Component {
                     if (this.props.message.raw_results[id]){
                         let results = this.props.message.raw_results[id].results
                         switch (this.props.message.raw_results[id].type){
+                            case 'giphy':
+                                return(<GiphyPartial image={results[0].url}/>);
                             case 'video':
                                 return(<VideoPartial videoId={results[0].id} key={i}/>);
                             case 'map':

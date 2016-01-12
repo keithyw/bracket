@@ -13,7 +13,6 @@ use Conark\ServiceWrapper\Services\BaseRemoteCallService;
 
 class GoogleGeocodingSearch extends BaseRemoteCallService implements GoogleGeocodingSearchInterface {
 
-    //private $_url = 'https://maps.googleapis.com/maps/api/geocode/output?parameters';
     private $_url = 'https://maps.googleapis.com/maps/api/geocode/json?';
     /**
      * @param string $address

@@ -34,11 +34,13 @@ return [
         'key'    => env('STRIPE_KEY'),
         'secret' => env('STRIPE_SECRET'),
     ],
+
     'pusher' => [
         'app_id' => env('PUSHER_APP_ID'),
         'key' => env('PUSHER_KEY'),
         'secret' => env('PUSHER_SECRET'),
     ],
+    'giphy' => env('GIPHY_KEY'),
     'google_maps' => env('GOOGLE_MAPS_API'),
     'youtube' => env('YOUTUBE_API'),
 
