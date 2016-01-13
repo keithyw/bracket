@@ -45,6 +45,28 @@ class MapPartial extends React.Component {
     }
 }
 
+class TwitterPartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    componentDidMount(){
+        console.log('loaded');
+        twttr.widgets.load();
+    }
+
+    render(){
+        let url = 'https://twitter.com/' + this.props.user + '/status/' + this.props.twitter_id;
+        return (
+            <div>
+                <blockquote className="twitter-tweet"><a href={url}>{this.props.text}</a></blockquote>
+            </div>
+        );
+    }
+}
+
+
+
 class VideoPartial extends React.Component {
     constructor(props){
         super(props);
@@ -91,7 +113,9 @@ export default class Message extends React.Component {
                         let results = this.props.message.raw_results[id].results
                         switch (this.props.message.raw_results[id].type){
                             case 'giphy':
-                                return(<GiphyPartial image={results[0].url}/>);
+                                return(<GiphyPartial image={results[0].url} key={i}/>);
+                            case 'twitter':
+                                return(<TwitterPartial twitter_id={results[0].id} user={results[0].user} text={results[0].text} key={i}/>);
                             case 'video':
                                 return(<VideoPartial videoId={results[0].id} key={i}/>);
                             case 'map':

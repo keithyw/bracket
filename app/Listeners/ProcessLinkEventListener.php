@@ -10,6 +10,7 @@ use App\Models\ProcessedMessage;
 use App\Models\RawResult;
 use App\Services\GiphySearchInterface;
 use App\Services\GoogleGeocodingSearchInterface;
+use App\Services\TwitterSearchInterface;
 use App\Services\YoutubeSearchInterface;
 use App\Services\YoutubeServiceInterface;
 use Illuminate\Queue\InteractsWithQueue;
@@ -34,20 +35,30 @@ class ProcessLinkEventListener
     private $_pusher;
 
     /**
-     * @var YoutubeServiceInterface
+     * @var TwitterSearchInterface
+     */
+    private $_twitterSearch;
+
+    /**
+     * @var YoutubeSearchInterface
      */
     private $_youtubeService;
 
     /**
      * @param GiphySearchInterface $giphySearchInterface
      * @param GoogleGeocodingSearchInterface $googleGeocodingSearchInterface
+     * @param TwitterSearchInterface $twitterSearchInterface
      * @param YoutubeSearchInterface $youtubeSearchInterface
      */
-    public function __construct(GiphySearchInterface $giphySearchInterface, GoogleGeocodingSearchInterface $googleGeocodingSearchInterface, YoutubeSearchInterface $youtubeSearchInterface)
+    public function __construct(GiphySearchInterface $giphySearchInterface,
+                GoogleGeocodingSearchInterface $googleGeocodingSearchInterface,
+                TwitterSearchInterface $twitterSearchInterface,
+                YoutubeSearchInterface $youtubeSearchInterface)
     {
         $this->_giphySearch = $giphySearchInterface;
         $this->_googleGeocodingSearch = $googleGeocodingSearchInterface;
         $this->_pusher = new Pusher(Config::get('services.pusher.key'), Config::get('services.pusher.secret'), Config::get('services.pusher.app_id'));
+        $this->_twitterSearch = $twitterSearchInterface;
         $this->_youtubeService = $youtubeSearchInterface;
     }
 
@@ -56,6 +67,21 @@ class ProcessLinkEventListener
         $arr = [];
         foreach ($results as $res){
             $arr[]= $res['images']['original'];
+        }
+        return $arr;
+    }
+
+    /**
+     * @param string $term
+     */
+    private function _processTwitter($term)
+    {
+        $results = $this->_twitterSearch->search($term);
+        $arr = [];
+        if (isset($results['statuses'])){
+            foreach ($results['statuses'] as $tweet){
+                $arr[]= ['id' => $tweet['id_str'], 'user' => $tweet['user']['screen_name'], 'text' => $tweet['text']];
+            }
         }
         return $arr;
     }
@@ -75,8 +101,10 @@ class ProcessLinkEventListener
         $data = [];
         switch ($event->type){
             case 'giphy':
-                $giphy = $this->_giphySearch->search($term);
-                $data = $this->_processGiphy($giphy);
+                $data = $this->_processGiphy($this->_giphySearch->search($term));
+                break;
+            case 'twitter':
+                $data = $this->_processTwitter($term);
                 break;
             case 'video':
                 $data = $this->_youtubeService->search($term);

@@ -116,7 +116,7 @@ class ParseMessage extends Job implements SelfHandling{
                         Log::info($matches);
                         $item->results = json_decode($item->results);
                         $data[$item->id]= $item;
-                        $newMessage = str_replace($matches[0][$x], $this->_convertBracket($ele['type'], $term, $item), $newMessage);
+                        $newMessage = str_replace($matches[0][$x], $this->_convertBracket($item), $newMessage);
 
                     }
                     else{
@@ -157,28 +157,11 @@ class ParseMessage extends Job implements SelfHandling{
     /**
      * convert [] into an html tag
      *
-     * @param string $type
-     * @param string $term
      * @param RawResult $item
      * @return string
      */
-    private function _convertBracket($type, $term, RawResult $item){
-        $tag = 'span';
-        //$tag = 'raw-result';
-
-        /**
-         * we'll expand on this later
-        switch ($type){
-            case 'link':
-            case 'image':
-            case 'giphy':
-            case 'preview':
-            case 'twitter':
-            case 'video':
-        }
-         */
+    private function _convertBracket(RawResult $item){
         return "|{$item->id}|";
-        //return "<{$tag} data-result-id=\"{$item->id}\" data-result-type=\"{$type}\">{$term}</{$tag}>";
     }
 }
 
