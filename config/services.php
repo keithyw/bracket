@@ -42,6 +42,9 @@ return [
     ],
     'giphy' => env('GIPHY_KEY'),
     'google_maps' => env('GOOGLE_MAPS_API'),
+    'instagram' => [
+        'access_token' => env('INSTAGRAM_ACCESS_TOKEN')
+    ],
     'twitter' => [
         'consumer_key' => env('TWITTER_CONSUMER_KEY'),
         'consumer_secret' => env('TWITTER_CONSUMER_SECRET'),

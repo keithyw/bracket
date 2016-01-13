@@ -10,6 +10,7 @@ use App\Models\ProcessedMessage;
 use App\Models\RawResult;
 use App\Services\GiphySearchInterface;
 use App\Services\GoogleGeocodingSearchInterface;
+use App\Services\InstagramSearchInterface;
 use App\Services\TwitterSearchInterface;
 use App\Services\YoutubeSearchInterface;
 use App\Services\YoutubeServiceInterface;
@@ -30,6 +31,11 @@ class ProcessLinkEventListener
     private $_googleGeocodingSearch;
 
     /**
+     * @var InstagramSearchInterface
+     */
+    private $_instagramSearch;
+
+    /**
      * @var Pusher
      */
     private $_pusher;
@@ -47,16 +53,19 @@ class ProcessLinkEventListener
     /**
      * @param GiphySearchInterface $giphySearchInterface
      * @param GoogleGeocodingSearchInterface $googleGeocodingSearchInterface
+     * @param InstagramSearchInterface $instagramSearchInterface
      * @param TwitterSearchInterface $twitterSearchInterface
      * @param YoutubeSearchInterface $youtubeSearchInterface
      */
     public function __construct(GiphySearchInterface $giphySearchInterface,
                 GoogleGeocodingSearchInterface $googleGeocodingSearchInterface,
+                InstagramSearchInterface $instagramSearchInterface,
                 TwitterSearchInterface $twitterSearchInterface,
                 YoutubeSearchInterface $youtubeSearchInterface)
     {
         $this->_giphySearch = $giphySearchInterface;
         $this->_googleGeocodingSearch = $googleGeocodingSearchInterface;
+        $this->_instagramSearch = $instagramSearchInterface;
         $this->_pusher = new Pusher(Config::get('services.pusher.key'), Config::get('services.pusher.secret'), Config::get('services.pusher.app_id'));
         $this->_twitterSearch = $twitterSearchInterface;
         $this->_youtubeService = $youtubeSearchInterface;
@@ -71,6 +80,21 @@ class ProcessLinkEventListener
         return $arr;
     }
 
+    private function _processInstagram($term)
+    {
+        $results = $this->_instagramSearch->search($term);
+        $arr = [];
+        foreach ($results as $res){
+            $image = $res['images']['standard_resolution'];
+            $arr[]= ['image' => $image, 'url' => $res['link']];
+        }
+        return $arr;
+    }
+
+    private function _processTwitch($channel)
+    {
+        return $channel;
+    }
     /**
      * @param string $term
      */
@@ -102,6 +126,12 @@ class ProcessLinkEventListener
         switch ($event->type){
             case 'giphy':
                 $data = $this->_processGiphy($this->_giphySearch->search($term));
+                break;
+            case 'instagram':
+                $data = $this->_processInstagram($term);
+                break;
+            case 'twitch':
+                $data = $this->_processTwitch($term);
                 break;
             case 'twitter':
                 $data = $this->_processTwitter($term);

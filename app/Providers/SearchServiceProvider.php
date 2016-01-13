@@ -16,6 +16,7 @@ class SearchServiceProvider extends ServiceProvider{
         //$this->app->bind('App\Services\GoogleSearchInterface', 'App\Services\GoogleSearch');
         $this->app->bind('App\Services\GiphySearchInterface', 'App\Services\GiphySearch');
         $this->app->bind('App\Services\GoogleGeocodingSearchInterface', 'App\Services\GoogleGeocodingSearch');
+        $this->app->bind('App\Services\InstagramSearchInterface', 'App\Services\InstagramSearch');
         $this->app->bind('App\Services\TwitterSearchInterface', 'App\Services\TwitterSearch');
         $this->app->bind('App\Services\YoutubeSearchInterface', 'App\Services\YoutubeSearch');
     }

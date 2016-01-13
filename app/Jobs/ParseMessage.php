@@ -17,7 +17,8 @@ use App\Models\RawMessage;
 use App\Models\RawResult;
 use App\Models\User;
 
-class ParseMessage extends Job implements SelfHandling{
+class ParseMessage extends Job implements SelfHandling
+{
 
     /**
      * @var string
@@ -35,10 +36,12 @@ class ParseMessage extends Job implements SelfHandling{
     private $_elements = [
         ['reg' => '/\[l(.*?)l\]/', 'type' => 'link'],
         ['reg' => '/\[i(.*?)i\]/', 'type' => 'image'],
+        ['reg' => '/\[ig(.*?)ig\]/', 'type' => 'instagram'],
         ['reg' => '/\[map(.*?)map\]/', 'type' => 'map'],
         ['reg' => '/\[g(.*?)g\]/', 'type' => 'giphy'],
         ['reg' => '/\[p(.*?)p\]/', 'type' => 'preview'],
         ['reg' => '/\[t(.*?)t\]/', 'type' => 'twitter'],
+        ['reg' => '/\[twitch(.*?)twitch\]/', 'type' => 'twitch'],
         ['reg' => '/\[v(.*?)v\]/', 'type' => 'video'],
 
     ];
@@ -96,11 +99,11 @@ class ParseMessage extends Job implements SelfHandling{
         // we'll use this as a starting template and then replace each of the []
         // into tags.
         $newMessage = $this->_message;
-        foreach ($this->_elements as $ele){
-            if (preg_match_all($ele['reg'], $this->_message, $matches)){
+        foreach ($this->_elements as $ele) {
+            if (preg_match_all($ele['reg'], $this->_message, $matches)) {
                 // $matches[0] contains the entire matching item
                 $x = 0;
-                foreach ($matches[1] as $term){
+                foreach ($matches[1] as $term) {
                     $term = trim($term);
                     Log::info("term " . $term);
                     // should cache the results
@@ -110,16 +113,15 @@ class ParseMessage extends Job implements SelfHandling{
                     // either way, we probably want to include the raw_results id to display a list of
                     // related items.
                     $item = RawResult::whereRaw('type = ? AND term = ?', [$ele['type'], $term])->first();
-                    if (isset($item->id)){
+                    if (isset($item->id)) {
                         //$arr = json_decode($item->results);
                         Log::info($item);
                         Log::info($matches);
                         $item->results = json_decode($item->results);
-                        $data[$item->id]= $item;
+                        $data[$item->id] = $item;
                         $newMessage = str_replace($matches[0][$x], $this->_convertBracket($item), $newMessage);
 
-                    }
-                    else{
+                    } else {
                         // put the actual term search into a background type of call
                         // probably need more stuff like the raw message that was saved
                         // so we can reference that to get the processed message
@@ -133,15 +135,14 @@ class ParseMessage extends Job implements SelfHandling{
         }
         // this is causing double saves because of async issues
         // so we need to try and grab the processed message via the raw message key
-        if (isset($raw->processedMessage->id)){
+        if (isset($raw->processedMessage->id)) {
             $processedMessage = $raw->processedMessage;
             /**
-            $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
-            $processedMessage->rawMessage()->associate($raw);
-            $processedMessage->save();
+             * $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
+             * $processedMessage->rawMessage()->associate($raw);
+             * $processedMessage->save();
              */
-        }
-        else{
+        } else {
             $processedMessage = new ProcessedMessage();
             $processedMessage->fill(['message' => $newMessage, 'raw_results' => json_encode($data)]);
             $processedMessage->rawMessage()->associate($raw);
@@ -150,6 +151,7 @@ class ParseMessage extends Job implements SelfHandling{
         // save to processed message?
         //return ['message' => $newMessage, 'raw_results' => $data, 'processed_message' => $processedMessage];
         $processedMessage->raw_results = $data;
+
         return $processedMessage;
         //return true;
     }
@@ -160,15 +162,8 @@ class ParseMessage extends Job implements SelfHandling{
      * @param RawResult $item
      * @return string
      */
-    private function _convertBracket(RawResult $item){
+    private function _convertBracket(RawResult $item)
+    {
         return "|{$item->id}|";
     }
 }
-
-/**
-['reg' => '/\[l(.*?)l\]/', 'type' => 'link'],
-        ['reg' => '/\[i(.*?)i\]/', 'type' => 'image'],
-        ['reg' => '/\[g(.*?)g\]/', 'type' => 'giphy'],
-        ['reg' => '/\[p(.*?)p\]/', 'type' => 'preview'],
-        ['reg' => '/\[t(.*?)t\]/', 'type' => 'twitter'],
-        ['reg' => '/\[v(.*?)v\]/', 'type' => 'video'],*/

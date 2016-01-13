@@ -28,6 +28,22 @@ class GiphyPartial extends React.Component {
     }
 }
 
+class InstagramPartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        return (
+            <div>
+                <a href={this.props.url}>
+                    <img src={this.props.image.url}/>
+                </a>
+            </div>
+        );
+    }
+}
+
 class MapPartial extends React.Component {
     constructor(props){
         super(props);
@@ -45,13 +61,32 @@ class MapPartial extends React.Component {
     }
 }
 
+//<iframe src="http://player.twitch.tv/?channel=quin69" frameborder="0" scrolling="no" height="378" width="620"></iframe><a href="http://www.twitch.tv/quin69?tt_medium=live_embed&tt_content=text_link" style="padding:2px 0px 4px; display:block; width:345px; font-weight:normal; font-size:10px;text-decoration:underline;">Watch live video from Quin69 on www.twitch.tv</a>
+//<iframe src="http://www.twitch.tv/quin69/chat?popout=" frameborder="0" scrolling="no" height="500" width="350"></iframe>
+class TwitchPartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        let url = `http://player.twitch.tv/?channel=${this.props.channel}`;
+        let chat = `http://www.twitch.tv/${this.props.channel}/chat?=popout=`;
+        return (
+            <div>
+                <iframe src={url} frameborder="0" scrolling="no" height="378" width="620">
+                </iframe>
+                <iframe src={chat} frameborder="0"scrolling="no" height="378" width="350">
+                </iframe>
+            </div>
+        );
+    }
+}
 class TwitterPartial extends React.Component {
     constructor(props){
         super(props);
     }
 
     componentDidMount(){
-        console.log('loaded');
         twttr.widgets.load();
     }
 
@@ -114,6 +149,10 @@ export default class Message extends React.Component {
                         switch (this.props.message.raw_results[id].type){
                             case 'giphy':
                                 return(<GiphyPartial image={results[0].url} key={i}/>);
+                            case 'instagram':
+                                return(<InstagramPartial image={results[0].image} url={results[0].url} key={i}/>);
+                            case 'twitch':
+                                return(<TwitchPartial channel={results} key={i}/>);
                             case 'twitter':
                                 return(<TwitterPartial twitter_id={results[0].id} user={results[0].user} text={results[0].text} key={i}/>);
                             case 'video':
