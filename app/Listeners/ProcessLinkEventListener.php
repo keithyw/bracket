@@ -11,6 +11,7 @@ use App\Models\RawResult;
 use App\Services\GiphySearchInterface;
 use App\Services\GoogleGeocodingSearchInterface;
 use App\Services\InstagramSearchInterface;
+use App\Services\OMDBSearchInterface;
 use App\Services\TwitterSearchInterface;
 use App\Services\YoutubeSearchInterface;
 use App\Services\YoutubeServiceInterface;
@@ -36,6 +37,11 @@ class ProcessLinkEventListener
     private $_instagramSearch;
 
     /**
+     * @var OMDBSearchInterface
+     */
+    private $_omdbSearch;
+
+    /**
      * @var Pusher
      */
     private $_pusher;
@@ -54,18 +60,21 @@ class ProcessLinkEventListener
      * @param GiphySearchInterface $giphySearchInterface
      * @param GoogleGeocodingSearchInterface $googleGeocodingSearchInterface
      * @param InstagramSearchInterface $instagramSearchInterface
+     * @param OMDBSearchInterface $omdbSearchInterface
      * @param TwitterSearchInterface $twitterSearchInterface
      * @param YoutubeSearchInterface $youtubeSearchInterface
      */
     public function __construct(GiphySearchInterface $giphySearchInterface,
                 GoogleGeocodingSearchInterface $googleGeocodingSearchInterface,
                 InstagramSearchInterface $instagramSearchInterface,
+                OMDBSearchInterface $omdbSearchInterface,
                 TwitterSearchInterface $twitterSearchInterface,
                 YoutubeSearchInterface $youtubeSearchInterface)
     {
         $this->_giphySearch = $giphySearchInterface;
         $this->_googleGeocodingSearch = $googleGeocodingSearchInterface;
         $this->_instagramSearch = $instagramSearchInterface;
+        $this->_omdbSearch = $omdbSearchInterface;
         $this->_pusher = new Pusher(Config::get('services.pusher.key'), Config::get('services.pusher.secret'), Config::get('services.pusher.app_id'));
         $this->_twitterSearch = $twitterSearchInterface;
         $this->_youtubeService = $youtubeSearchInterface;
@@ -87,6 +96,32 @@ class ProcessLinkEventListener
         foreach ($results as $res){
             $image = $res['images']['standard_resolution'];
             $arr[]= ['image' => $image, 'url' => $res['link']];
+        }
+        return $arr;
+    }
+
+
+    /**
+     *
+
+    $url = 'http://example.com/image.php';
+    $img = '/my/folder/flower.gif';
+    file_put_contents($img, file_get_contents($url));
+     */
+    private function _processOMDB($term)
+    {
+        $results = $this->_omdbSearch->search($term);
+        $arr = [];
+        Log::info($results);
+        foreach ($results as &$res){
+            if (isset($res['Poster']) && $res['Poster'] != 'N/A'){
+                $img = '/images/' . md5($res['Poster']) . '.jpg';
+                $name = public_path($img);
+                $image = file_get_contents($res['Poster']);
+                file_put_contents($name, $image);
+                $res['image'] = $img;
+                $arr[] = $res;
+            }
         }
         return $arr;
     }
@@ -129,6 +164,9 @@ class ProcessLinkEventListener
                 break;
             case 'instagram':
                 $data = $this->_processInstagram($term);
+                break;
+            case 'movie':
+                $data = $this->_processOMDB($term);
                 break;
             case 'twitch':
                 $data = $this->_processTwitch($term);

@@ -39,6 +39,7 @@ class ParseMessage extends Job implements SelfHandling
         ['reg' => '/\[ig(.*?)ig\]/', 'type' => 'instagram'],
         ['reg' => '/\[map(.*?)map\]/', 'type' => 'map'],
         ['reg' => '/\[g(.*?)g\]/', 'type' => 'giphy'],
+        ['reg' => '/\[movie(.*?)movie\]/', 'type' => 'movie'],
         ['reg' => '/\[p(.*?)p\]/', 'type' => 'preview'],
         ['reg' => '/\[t(.*?)t\]/', 'type' => 'twitter'],
         ['reg' => '/\[twitch(.*?)twitch\]/', 'type' => 'twitch'],

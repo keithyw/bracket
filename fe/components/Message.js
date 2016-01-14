@@ -14,6 +14,8 @@ class LinkPartial extends React.Component {
     }
 }
 
+//http://us.battle.net/d3/static/js/tooltips.js
+
 class GiphyPartial extends React.Component {
     constructor(props){
         super(props);
@@ -61,8 +63,26 @@ class MapPartial extends React.Component {
     }
 }
 
-//<iframe src="http://player.twitch.tv/?channel=quin69" frameborder="0" scrolling="no" height="378" width="620"></iframe><a href="http://www.twitch.tv/quin69?tt_medium=live_embed&tt_content=text_link" style="padding:2px 0px 4px; display:block; width:345px; font-weight:normal; font-size:10px;text-decoration:underline;">Watch live video from Quin69 on www.twitch.tv</a>
-//<iframe src="http://www.twitch.tv/quin69/chat?popout=" frameborder="0" scrolling="no" height="500" width="350"></iframe>
+class MoviePartial extends React.Component {
+    constructor(props){
+        super(props);
+    }
+
+    render(){
+        let url = `http://www.imdb.com/title/${this.props.movie}`;
+        return (
+            <div>
+                <a href={url} target="_blank">
+                    <p>
+                        <img src={this.props.image}/>
+                    </p>
+                    <h3>{this.props.title} ({this.props.year})</h3>
+                </a>
+            </div>
+        );
+    }
+}
+
 class TwitchPartial extends React.Component {
     constructor(props){
         super(props);
@@ -151,6 +171,8 @@ export default class Message extends React.Component {
                                 return(<GiphyPartial image={results[0].url} key={i}/>);
                             case 'instagram':
                                 return(<InstagramPartial image={results[0].image} url={results[0].url} key={i}/>);
+                            case 'movie':
+                                return(<MoviePartial movie={results[0].imdbID} image={results[0].image} title={results[0].Title} year={results[0].Year} key={i}/>);
                             case 'twitch':
                                 return(<TwitchPartial channel={results} key={i}/>);
                             case 'twitter':
