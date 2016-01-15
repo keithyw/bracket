@@ -130,7 +130,9 @@ class VideoPartial extends React.Component {
     render(){
         let url = 'http://www.youtube.com/embed/' + this.props.videoId;
         return(
-            <iframe type="text/html" width="640" height="480" src={url} frameBorder="0"></iframe>
+            <div className="youtube">
+            <iframe type="text/html"  src={url} frameBorder="0"></iframe>
+                </div>
         );
     }
 }

@@ -8,7 +8,7 @@
     <link href="/css/main.css" rel="stylesheet" type="text/css" media="screen"/>
 </head>
 <body>
-<div id="content" class="content">
+<div id="content" >
     @yield('content')
 </div>
 <script>

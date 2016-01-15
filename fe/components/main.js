@@ -7,7 +7,7 @@ class Main extends React.Component {
 
         let messages = ['test1', 'test2', 'test3'];
         return (
-            <div>
+            <div id="main">
                 <h1>[[Bracket]]</h1>
                 <MessageBox/>
             </div>

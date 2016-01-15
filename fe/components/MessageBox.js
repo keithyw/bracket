@@ -22,7 +22,7 @@ export default class MessageBox extends React.Component {
     }
 
     componentDidMount() {
-        this.pusher = new Pusher('a465bf31c05983004c18', {
+        this.pusher = new Pusher('b514520607b7ef06364d', {
             encrypted: true
         });
         this.channel = this.pusher.subscribe('message_channel');
